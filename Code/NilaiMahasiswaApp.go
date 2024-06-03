@@ -153,6 +153,13 @@ func tampilkanData() {
 						fmt.Printf("  Grade: %s\n", ArrMahasiswa[i].MataKuliahs[j].Grade)
 					}
 				}
+
+				fmt.Println("  ===================================")
+				var TotalSKS int
+				for k := 0 ; k < jumlahMataKuliah; k++ {
+					TotalSKS += ArrMahasiswa[i].MataKuliahs[k].SKS
+				}
+				fmt.Printf("  Total SKS yang di ambil: %d\n", TotalSKS)
 			}
 		}
 		if !found {
