@@ -5,16 +5,17 @@ import (
 )
 
 type Mahasiswa struct {
-	Nama        string
-	NIM         int
-	Semester    int
-	Jurusan 	string
-	MataKuliahs [10]MataKuliah
+	Nama            string
+	NIM             int
+	Semester        int
+	Jurusan         string
+	MataKuliahs     [10]MataKuliah
+	JumlahMataKuliah int
 }
 
 type MataKuliah struct {
 	NamaMataKuliah string
-	SKS 		   int
+	SKS            int
 	UTS            int
 	UAS            int
 	Quiz           int
@@ -23,8 +24,7 @@ type MataKuliah struct {
 }
 
 var ArrMahasiswa [100]Mahasiswa
-var jumlahMahasiswa int
-var jumlahMataKuliah int
+var jumlahMahasiswa int = 0
 
 func main() {
 	for {
@@ -49,7 +49,7 @@ func main() {
 		} else if pilihan == 4 {
 			updateData()
 		} else if pilihan == 5 {
-			// transkipNilai()
+			transkipNilai()
 		} else if pilihan == 6 {
 			fmt.Println("Terima Kasih")
 			return
@@ -62,12 +62,12 @@ func main() {
 func inputDataMahasiswa() {
 	var pilihanInputData int
 	fmt.Println("\n === Menu Input Data ===")
-	fmt.Println("1. Data Mahasiswa") 
+	fmt.Println("1. Data Mahasiswa")
 	fmt.Println("2. Data Mata Kuliah Mahasiswa")
 	fmt.Print("Pilih opsi: ")
 	fmt.Scan(&pilihanInputData)
 
-	if pilihanInputData == 1{
+	if pilihanInputData == 1 {
 		fmt.Println("===================================")
 		fmt.Printf("Masukkan nama mahasiswa %d: ", jumlahMahasiswa+1)
 		fmt.Scan(&ArrMahasiswa[jumlahMahasiswa].Nama)
@@ -82,43 +82,51 @@ func inputDataMahasiswa() {
 		fmt.Scan(&ArrMahasiswa[jumlahMahasiswa].Jurusan)
 
 		jumlahMahasiswa++
-	}else if pilihanInputData == 2{
+	} else if pilihanInputData == 2 {
 		var NIM int
 		fmt.Print("Masukkan NIM mahasiswa yang ingin ditambahkan mata kuliah: ")
 		fmt.Scan(&NIM)
 
 		for i := 0; i < jumlahMahasiswa; i++ {
 			if ArrMahasiswa[i].NIM == NIM {
-    			fmt.Println("  ===================================")
-				fmt.Printf("  Masukkan nama mata kuliah %d untuk mahasiswa %s: ", jumlahMataKuliah+1, ArrMahasiswa[i].Nama)
-				fmt.Scan(&ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].NamaMataKuliah)
-	
-				fmt.Printf("  Masukkan SKS mata kuliah %s untuk mahasiswa %s: ", ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].NamaMataKuliah, ArrMahasiswa[i].Nama)
-				fmt.Scan(&ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].SKS)
+				mkIndex := ArrMahasiswa[i].JumlahMataKuliah
+				if mkIndex < 10 { // Pastikan tidak melebihi kapasitas array
+					fmt.Println("  ===================================")
+					fmt.Printf("  Masukkan nama mata kuliah %d untuk mahasiswa %s: ", mkIndex+1, ArrMahasiswa[i].Nama)
+					fmt.Scan(&ArrMahasiswa[i].MataKuliahs[mkIndex].NamaMataKuliah)
 
-				fmt.Printf("  Masukkan nilai UTS mata kuliah %s untuk mahasiswa %s: ", ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].NamaMataKuliah, ArrMahasiswa[i].Nama)
-				fmt.Scan(&ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].UTS)
-		
-				fmt.Printf("  Masukkan nilai UAS mata kuliah %s untuk mahasiswa %s: ", ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].NamaMataKuliah, ArrMahasiswa[i].Nama)
-				fmt.Scan(&ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].UAS)
-		
-				fmt.Printf("  Masukkan nilai Quiz mata kuliah %s untuk mahasiswa %s: ", ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].NamaMataKuliah, ArrMahasiswa[i].Nama)
-				fmt.Scan(&ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].Quiz)
-		
-				ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].Total = (ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].UTS + ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].UAS + ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].Quiz)/3
-		
-				if ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].Total >= 90 {
-					ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].Grade = "A"
-				} else if ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].Total >= 80 && ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].Total < 90 {
-					ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].Grade = "B"
-				} else if ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].Total >= 70 && ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].Total < 80 {
-					ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].Grade = "C"
-				} else if ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].Total >= 60 && ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].Total < 70 {
-					ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].Grade = "D"
+					fmt.Printf("  Masukkan SKS mata kuliah %s untuk mahasiswa %s: ", ArrMahasiswa[i].MataKuliahs[mkIndex].NamaMataKuliah, ArrMahasiswa[i].Nama)
+					fmt.Scan(&ArrMahasiswa[i].MataKuliahs[mkIndex].SKS)
+
+					fmt.Printf("  Masukkan nilai UTS mata kuliah %s untuk mahasiswa %s: ", ArrMahasiswa[i].MataKuliahs[mkIndex].NamaMataKuliah, ArrMahasiswa[i].Nama)
+					fmt.Scan(&ArrMahasiswa[i].MataKuliahs[mkIndex].UTS)
+
+					fmt.Printf("  Masukkan nilai UAS mata kuliah %s untuk mahasiswa %s: ", ArrMahasiswa[i].MataKuliahs[mkIndex].NamaMataKuliah, ArrMahasiswa[i].Nama)
+					fmt.Scan(&ArrMahasiswa[i].MataKuliahs[mkIndex].UAS)
+
+					fmt.Printf("  Masukkan nilai Quiz mata kuliah %s untuk mahasiswa %s: ", ArrMahasiswa[i].MataKuliahs[mkIndex].NamaMataKuliah, ArrMahasiswa[i].Nama)
+					fmt.Scan(&ArrMahasiswa[i].MataKuliahs[mkIndex].Quiz)
+
+					ArrMahasiswa[i].MataKuliahs[mkIndex].Total = (ArrMahasiswa[i].MataKuliahs[mkIndex].UTS + ArrMahasiswa[i].MataKuliahs[mkIndex].UAS + ArrMahasiswa[i].MataKuliahs[mkIndex].Quiz) / 3
+
+					switch {
+					case ArrMahasiswa[i].MataKuliahs[mkIndex].Total >= 90:
+						ArrMahasiswa[i].MataKuliahs[mkIndex].Grade = "A"
+					case ArrMahasiswa[i].MataKuliahs[mkIndex].Total >= 80:
+						ArrMahasiswa[i].MataKuliahs[mkIndex].Grade = "B"
+					case ArrMahasiswa[i].MataKuliahs[mkIndex].Total >= 70:
+						ArrMahasiswa[i].MataKuliahs[mkIndex].Grade = "C"
+					case ArrMahasiswa[i].MataKuliahs[mkIndex].Total >= 60:
+						ArrMahasiswa[i].MataKuliahs[mkIndex].Grade = "D"
+					default:
+						ArrMahasiswa[i].MataKuliahs[mkIndex].Grade = "E"
+					}
+
+					ArrMahasiswa[i].JumlahMataKuliah++
 				} else {
-					ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah].Grade = "E"
+					fmt.Println("Mahasiswa ini sudah mencapai jumlah maksimum mata kuliah.")
 				}
-				jumlahMataKuliah++
+				break
 			}
 		}
 	}
@@ -140,9 +148,9 @@ func tampilkanData() {
 		found := false
 		for i := 0; i < jumlahMahasiswa; i++ {
 			if ArrMahasiswa[i].Nama == Nama {
+				found = true
 				for j := 0; j < len(ArrMahasiswa[i].MataKuliahs); j++ {
 					if ArrMahasiswa[i].MataKuliahs[j].NamaMataKuliah != "" {
-						found = true
 						fmt.Println("  ===================================")
 						fmt.Printf("  Nama Mata Kuliah: %s\n", ArrMahasiswa[i].MataKuliahs[j].NamaMataKuliah)
 						fmt.Printf("  SKS: %d\n", ArrMahasiswa[i].MataKuliahs[j].SKS)
@@ -156,7 +164,8 @@ func tampilkanData() {
 
 				fmt.Println("  ===================================")
 				var TotalSKS int
-				for k := 0 ; k < jumlahMataKuliah; k++ {
+				mkIndex := ArrMahasiswa[i].JumlahMataKuliah
+				for k := 0 ; k < mkIndex; k++ {
 					TotalSKS += ArrMahasiswa[i].MataKuliahs[k].SKS
 				}
 				fmt.Printf("  Total SKS yang di ambil: %d\n", TotalSKS)
@@ -172,7 +181,8 @@ func tampilkanData() {
 
 		found := false
 		for i := 0; i < jumlahMahasiswa; i++ {
-			for j := 0; j < jumlahMataKuliah; j++ {
+			mkIndex := ArrMahasiswa[i].JumlahMataKuliah
+			for j := 0; j < mkIndex; j++ {
 				if ArrMahasiswa[i].MataKuliahs[j].NamaMataKuliah == NamaMataKuliah {
 					found = true
 					fmt.Println("  ===================================")
@@ -229,14 +239,15 @@ func hapusData() {
 		found := false
 		for i := 0; i < jumlahMahasiswa; i++ {
 			if ArrMahasiswa[i].Nama == Nama {
-				for j := 0; j < jumlahMataKuliah; j++ {
+				mkIndex := ArrMahasiswa[i].JumlahMataKuliah
+				for j := 0; j < mkIndex; j++ {
 					if ArrMahasiswa[i].MataKuliahs[j].NamaMataKuliah == NamaMataKuliah {
 						found = true
-						for k := j; k < jumlahMataKuliah-1; k++ {
+						for k := j; k < mkIndex-1; k++ {
 							ArrMahasiswa[i].MataKuliahs[k] = ArrMahasiswa[i].MataKuliahs[k+1]
 						}
-						ArrMahasiswa[i].MataKuliahs[jumlahMataKuliah - 1] = MataKuliah{}
-						jumlahMataKuliah--
+						ArrMahasiswa[i].MataKuliahs[mkIndex - 1] = MataKuliah{}
+						mkIndex--
 						fmt.Println("  Data berhasil di-hapus.")
 					}
 				}
@@ -341,7 +352,8 @@ func updateData() {
 		found := false
 		for i := 0; i < jumlahMahasiswa; i++ {
 			if ArrMahasiswa[i].Nama == Nama {
-				for j := 0; j < jumlahMataKuliah; j++ {
+				mkIndex := ArrMahasiswa[i].JumlahMataKuliah
+				for j := 0; j < mkIndex; j++ {
 					if ArrMahasiswa[i].MataKuliahs[j].NamaMataKuliah == NamaMataKuliah {
 						found = true
 	
@@ -432,5 +444,39 @@ func updateData() {
 		if !found {
 			fmt.Println("  Data tidak ditemukan!")
 		}
+	}
+}
+
+func transkipNilai() {
+	var Nama string
+	fmt.Print("Masukkan Nama mahasiswa: ")
+	fmt.Scan(&Nama)
+
+	found := false
+	for i := 0; i < jumlahMahasiswa; i++ {
+		if ArrMahasiswa[i].Nama == Nama {
+			found = true
+			fmt.Println("  ===================================")
+			fmt.Printf("  Nama Mahasiswa: %s\n", ArrMahasiswa[i].Nama)
+			fmt.Printf("  NIM: %d\n", ArrMahasiswa[i].NIM)
+			fmt.Printf("  Semester: %d\n", ArrMahasiswa[i].Semester)
+			fmt.Printf("  Jurusan: %s\n", ArrMahasiswa[i].Jurusan)
+			for j := 0; j < ArrMahasiswa[i].JumlahMataKuliah; j++ {
+				if ArrMahasiswa[i].MataKuliahs[j].NamaMataKuliah != "" {
+					fmt.Println("  ===================================")
+					fmt.Printf("  Nama Mata Kuliah: %s\n", ArrMahasiswa[i].MataKuliahs[j].NamaMataKuliah)
+					fmt.Printf("  SKS: %d\n", ArrMahasiswa[i].MataKuliahs[j].SKS)
+					fmt.Printf("  Nilai UTS: %d\n", ArrMahasiswa[i].MataKuliahs[j].UTS)
+					fmt.Printf("  Nilai UAS: %d\n", ArrMahasiswa[i].MataKuliahs[j].UAS)
+					fmt.Printf("  Nilai Quiz: %d\n", ArrMahasiswa[i].MataKuliahs[j].Quiz)
+					fmt.Printf("  Total Nilai: %d\n", ArrMahasiswa[i].MataKuliahs[j].Total)
+					fmt.Printf("  Grade: %s\n", ArrMahasiswa[i].MataKuliahs[j].Grade)
+				}
+			}
+			break
+		}
+	}
+	if !found {
+		fmt.Println("Data mahasiswa tidak ditemukan.")
 	}
 }
