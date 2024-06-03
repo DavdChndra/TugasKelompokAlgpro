@@ -25,6 +25,7 @@ type MataKuliah struct {
 
 var ArrMahasiswa [100]Mahasiswa
 var jumlahMahasiswa int = 0
+var NIM int = 103000
 
 func main() {
 	for {
@@ -72,15 +73,15 @@ func inputDataMahasiswa() {
 		fmt.Printf("Masukkan nama mahasiswa %d: ", jumlahMahasiswa+1)
 		fmt.Scan(&ArrMahasiswa[jumlahMahasiswa].Nama)
 
-		fmt.Printf("Masukkan NIM mahasiswa %s: ", ArrMahasiswa[jumlahMahasiswa].Nama)
-		fmt.Scan(&ArrMahasiswa[jumlahMahasiswa].NIM)
-
 		fmt.Printf("Masukkan Semester mahasiswa %s: ", ArrMahasiswa[jumlahMahasiswa].Nama)
 		fmt.Scan(&ArrMahasiswa[jumlahMahasiswa].Semester)
 
 		fmt.Printf("Masukkan Jurusan mahasiswa %s: ", ArrMahasiswa[jumlahMahasiswa].Nama)
 		fmt.Scan(&ArrMahasiswa[jumlahMahasiswa].Jurusan)
 
+		NIM++
+		ArrMahasiswa[jumlahMahasiswa].NIM = NIM
+		
 		jumlahMahasiswa++
 	} else if pilihanInputData == 2 {
 		var NIM int
@@ -300,7 +301,7 @@ func updateData() {
 
 				} else if pilihan == 2 {
 					var NIMBaru int
-					fmt.Printf("  NIM: %s\n", ArrMahasiswa[i].NIM)
+					fmt.Printf("  NIM: %d\n", ArrMahasiswa[i].NIM)
 
 					fmt.Println("  ===================================")
 
