@@ -60,7 +60,7 @@ func main() {
 	}
 }
 
-func inputDataMahasiswa() {
+func inputDataMahasiswa() {	
 	var pilihanInputData int
 	fmt.Println("\n === Menu Input Data ===")
 	fmt.Println("1. Data Mahasiswa")
@@ -88,8 +88,10 @@ func inputDataMahasiswa() {
 		fmt.Print("Masukkan NIM mahasiswa yang ingin ditambahkan mata kuliah: ")
 		fmt.Scan(&NIM)
 
+		found := false
 		for i := 0; i < jumlahMahasiswa; i++ {
 			if ArrMahasiswa[i].NIM == NIM {
+				found = true
 				mkIndex := ArrMahasiswa[i].JumlahMataKuliah
 				if mkIndex < 10 { // Pastikan tidak melebihi kapasitas array
 					fmt.Println("  ===================================")
@@ -130,25 +132,39 @@ func inputDataMahasiswa() {
 				break
 			}
 		}
+		if !found {
+			fmt.Println("  Data tidak ditemukan!")
+		}
 	}
 }
 
 func tampilkanData() {
 	var pilihanTampilkanData int
 	fmt.Println("\n === Menu Tampilkan Data ===")
-	fmt.Println("1. Data Mahasiswa") 
-	fmt.Println("2. Data Mata Kuliah Mahasiswa")
+	fmt.Println("1. Kumpulan data mahasiswa ") 
+	fmt.Println("2. Daftar matakuliah yang diambil oleh mahasiswa ") 
+	fmt.Println("3. Daftar mahasiswa yang mengambil suatu matakuliah ")
+	fmt.Println("4. Jumlah SKS yang diambil oleh mahasiswa ")
 	fmt.Print("Pilih opsi: ")
 	fmt.Scan(&pilihanTampilkanData)
 
 	if pilihanTampilkanData == 1{
-		var Nama string
-		fmt.Print("Masukkan Nama mahasiswa: ")
-		fmt.Scan(&Nama)
+		fmt.Println("  ===== Kumpulan Data Mahasiswa =====")
+		for i := 0; i < jumlahMahasiswa; i++ {
+			fmt.Println("  ===================================")
+			fmt.Printf("  Nama: %s\n", ArrMahasiswa[i].Nama)
+			fmt.Printf("  NIM: %d\n", ArrMahasiswa[i].NIM)
+			fmt.Printf("  Semester: %d\n", ArrMahasiswa[i].Semester)
+			fmt.Printf("  Jurusan: %s\n", ArrMahasiswa[i].Jurusan)
+		}
+	} else if pilihanTampilkanData == 2{
+		var NIM int
+		fmt.Print("Masukkan NIM mahasiswa: ")
+		fmt.Scan(&NIM)
 
 		found := false
 		for i := 0; i < jumlahMahasiswa; i++ {
-			if ArrMahasiswa[i].Nama == Nama {
+			if ArrMahasiswa[i].NIM == NIM {
 				found = true
 				for j := 0; j < len(ArrMahasiswa[i].MataKuliahs); j++ {
 					if ArrMahasiswa[i].MataKuliahs[j].NamaMataKuliah != "" {
@@ -162,20 +178,12 @@ func tampilkanData() {
 						fmt.Printf("  Grade: %s\n", ArrMahasiswa[i].MataKuliahs[j].Grade)
 					}
 				}
-
-				fmt.Println("  ===================================")
-				var TotalSKS int
-				mkIndex := ArrMahasiswa[i].JumlahMataKuliah
-				for k := 0 ; k < mkIndex; k++ {
-					TotalSKS += ArrMahasiswa[i].MataKuliahs[k].SKS
-				}
-				fmt.Printf("  Total SKS yang di ambil: %d\n", TotalSKS)
 			}
 		}
 		if !found {
 			fmt.Println("  Data tidak ditemukan!")
 		}
-	}else if pilihanTampilkanData == 2{
+	}else if pilihanTampilkanData == 3{
 		var NamaMataKuliah string
 		fmt.Print("Masukkan Nama Mata Kuliah: ")
 		fmt.Scan(&NamaMataKuliah)
@@ -197,6 +205,26 @@ func tampilkanData() {
 		if !found {
 			fmt.Println("  Data tidak ditemukan!")
 		}
+	} else if pilihanTampilkanData == 4 {
+		var NIM int
+		fmt.Print("Masukkan NIM mahasiswa: ")
+		fmt.Scan(&NIM)
+
+		found := false
+		for i := 0; i < jumlahMahasiswa; i++ {
+			if ArrMahasiswa[i].NIM == NIM {
+				found = true
+				var TotalSKS int
+				mkIndex := ArrMahasiswa[i].JumlahMataKuliah
+				for j := 0 ; j < mkIndex; j++ {
+					TotalSKS += ArrMahasiswa[i].MataKuliahs[j].SKS
+				}
+				fmt.Printf("  Total SKS yang di ambil: %d\n", TotalSKS)
+			}
+		}
+		if !found {
+			fmt.Println("  Data tidak ditemukan!")
+		}
 	}
 }
 
@@ -209,13 +237,13 @@ func hapusData() {
 	fmt.Scan(&pilihanHapusData)
 
 	if pilihanHapusData == 1{
-		var Nama string
-		fmt.Print("Masukkan Nama mahasiswa yang akan di hapus : ")
-		fmt.Scan(&Nama)
+		var NIM int
+		fmt.Print("Masukkan NIM mahasiswa yang akan di hapus : ")
+		fmt.Scan(&NIM)
 
 		found := false
 		for i := 0; i < jumlahMahasiswa; i++ {
-			if ArrMahasiswa[i].Nama == Nama {
+			if ArrMahasiswa[i].NIM == NIM {
 				found = true
 				for j := i; j < jumlahMahasiswa - 1; i++ {
 					ArrMahasiswa[j] = ArrMahasiswa[j+1]
@@ -229,9 +257,9 @@ func hapusData() {
 			fmt.Println("  Data tidak ditemukan!")
 		}
 	} else if pilihanHapusData == 2{
-		var Nama string
-		fmt.Print("Masukkan Nama mahasiswa : ")
-		fmt.Scan(&Nama)
+		var NIM int
+		fmt.Print("Masukkan NIM mahasiswa : ")
+		fmt.Scan(&NIM)
 
 		var NamaMataKuliah string
 		fmt.Print("Masukkan Nama Mata Kuliah mahasiswa yang akan di hapus : ")
@@ -239,7 +267,7 @@ func hapusData() {
 
 		found := false
 		for i := 0; i < jumlahMahasiswa; i++ {
-			if ArrMahasiswa[i].Nama == Nama {
+			if ArrMahasiswa[i].NIM == NIM {
 				mkIndex := ArrMahasiswa[i].JumlahMataKuliah
 				for j := 0; j < mkIndex; j++ {
 					if ArrMahasiswa[i].MataKuliahs[j].NamaMataKuliah == NamaMataKuliah {
@@ -269,13 +297,13 @@ func updateData() {
 	fmt.Scan(&pilihanUpdateData)
 
 	if pilihanUpdateData == 1{
-		var Nama string
-		fmt.Print("Masukkan Nama mahasiswa : ")
-		fmt.Scan(&Nama)
+		var NIM int
+		fmt.Print("Masukkan NIM mahasiswa : ")
+		fmt.Scan(&NIM)
 
 		found := false
 		for i := 0; i < jumlahMahasiswa; i++ {
-			if ArrMahasiswa[i].Nama == Nama {
+			if ArrMahasiswa[i].NIM == NIM {
 				found = true
 				
 				var pilihan int
@@ -342,9 +370,9 @@ func updateData() {
 			fmt.Println("  Data tidak ditemukan!")
 		}
 	}else if pilihanUpdateData == 2 {
-		var Nama string
-		fmt.Print("Masukkan Nama mahasiswa : ")
-		fmt.Scan(&Nama)
+		var NIM int
+		fmt.Print("Masukkan NIM mahasiswa : ")
+		fmt.Scan(&NIM)
 
 		var NamaMataKuliah string
 		fmt.Print("Masukkan Nama Mata Kuliah mahasiswa yang akan di hapus : ")
@@ -352,7 +380,7 @@ func updateData() {
 
 		found := false
 		for i := 0; i < jumlahMahasiswa; i++ {
-			if ArrMahasiswa[i].Nama == Nama {
+			if ArrMahasiswa[i].NIM == NIM {
 				mkIndex := ArrMahasiswa[i].JumlahMataKuliah
 				for j := 0; j < mkIndex; j++ {
 					if ArrMahasiswa[i].MataKuliahs[j].NamaMataKuliah == NamaMataKuliah {
@@ -449,13 +477,13 @@ func updateData() {
 }
 
 func transkipNilai() {
-	var Nama string
-	fmt.Print("Masukkan Nama mahasiswa: ")
-	fmt.Scan(&Nama)
+	var NIM int
+	fmt.Print("Masukkan NIM mahasiswa: ")
+	fmt.Scan(&NIM)
 
 	found := false
 	for i := 0; i < jumlahMahasiswa; i++ {
-		if ArrMahasiswa[i].Nama == Nama {
+		if ArrMahasiswa[i].NIM == NIM {
 			found = true
 			fmt.Println("  ===================================")
 			fmt.Printf("  Nama Mahasiswa: %s\n", ArrMahasiswa[i].Nama)
