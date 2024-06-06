@@ -44,7 +44,7 @@ func main() {
 		fmt.Scan(&pilihan)
 
 		if pilihan == 1 {
-			inputData()
+			inputData()	
 		} else if pilihan == 2 {
 			tampilkanData()
 		} else if pilihan == 3 {
